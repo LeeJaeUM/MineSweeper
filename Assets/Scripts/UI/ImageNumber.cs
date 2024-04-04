@@ -31,15 +31,13 @@ public class ImageNumber : MonoBehaviour
     {
         int findNumber = 0;
         int next = number;
-        int count = 2;
         if(number >= 0) 
         { 
             for(int i = 0; i < childImages.Length; i++)
             {
                 findNumber = next % 10;
-                childImages[count].sprite = numbers[findNumber];
+                childImages[i].sprite = numbers[findNumber];
                 next = next / 10;
-                count--;
             }
         }
         else
@@ -50,22 +48,21 @@ public class ImageNumber : MonoBehaviour
             {
                 if(minusCount > 0)
                 {
-                    childImages[count].sprite = numbers[11];
+                    childImages[i].sprite = numbers[11];
                     continue;
                 }
 
                 if(next == 0)
                 {
-                    childImages[count].sprite = numbers[10];
+                    childImages[i].sprite = numbers[10];
                     minusCount++;
                 }
                 else
                 {
                     findNumber = next % 10;
-                    childImages[count].sprite = numbers[findNumber];
+                    childImages[i].sprite = numbers[findNumber];
                     next = next / 10;
                 }
-                count--;
             }
         }
 

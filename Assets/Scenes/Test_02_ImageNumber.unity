@@ -329,7 +329,7 @@ GameObject:
   - component: {fileID: 1056227555}
   - component: {fileID: 1056227554}
   m_Layer: 5
-  m_Name: Number (2)
+  m_Name: Digit_100
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -404,7 +404,7 @@ GameObject:
   - component: {fileID: 1165926714}
   - component: {fileID: 1165926713}
   m_Layer: 5
-  m_Name: Number
+  m_Name: Digit_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -504,8 +504,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 606, y: 281}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 337, y: 305}
+  m_SizeDelta: {x: 200, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1209543113
 MonoBehaviour:
@@ -551,14 +551,14 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: -4.4
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
+  m_ReverseArrangement: 1
 --- !u!1 &1349719012
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,7 +639,7 @@ GameObject:
   - component: {fileID: 1497879654}
   - component: {fileID: 1497879653}
   m_Layer: 5
-  m_Name: Number (1)
+  m_Name: Digit_10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
