@@ -14,35 +14,30 @@ public class Test_ImageNumber : TestBase
         imageNumber = FindAnyObjectByType<ImageNumber>();
     }
 
+    private void Update()
+    {
+        imageNumber.Number = testInt;
+    }
+
     protected override void OnTest1(InputAction.CallbackContext context)
     {
-        StartCoroutine(Test());
+       
     }
     protected override void OnTest2(InputAction.CallbackContext context)
     {
-        imageNumber.NumberSelect(45);
+        imageNumber.NumberSelect();
     }
     protected override void OnTest3(InputAction.CallbackContext context)
     {
-        imageNumber.NumberSelect(1);
+        imageNumber.NumberSelect();
     }
     protected override void OnTest4(InputAction.CallbackContext context)
     {
-        imageNumber.NumberSelect(-65);
+        imageNumber.NumberSelect();
     }
     protected override void OnTest5(InputAction.CallbackContext context)
     {
-        imageNumber.NumberSelect(-5);
+        imageNumber.NumberSelect();
     }
 
-    IEnumerator Test()
-    {
-        int t = -99;
-        while(t < 1000)
-        {
-            imageNumber.NumberSelect(t);
-            yield return new WaitForSeconds(0.01f);
-            t++;
-        }
-    }
 }
