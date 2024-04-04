@@ -44,12 +44,20 @@ public class ImageNumber : MonoBehaviour
         }
         else
         {
+            int minusCount = 0;
             next *= -1;
             for (int i = 0; i < childImages.Length; i++)
             {
+                if(minusCount > 0)
+                {
+                    childImages[count].sprite = numbers[11];
+                    continue;
+                }
+
                 if(next == 0)
                 {
                     childImages[count].sprite = numbers[10];
+                    minusCount++;
                 }
                 else
                 {
