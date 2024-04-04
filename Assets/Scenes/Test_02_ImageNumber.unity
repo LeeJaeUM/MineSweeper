@@ -519,7 +519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 770af8115946a144e890c8a34e98f7dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numbers:
+  numberSprites:
   - {fileID: -2029009346, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
   - {fileID: 2045433250, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
   - {fileID: 1678414030, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
@@ -530,9 +530,9 @@ MonoBehaviour:
   - {fileID: 1680139064, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
   - {fileID: 2117363164, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
   - {fileID: 1656721600, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
-  - {fileID: 980368803, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
   - {fileID: 637253013, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
-  childImages: []
+  - {fileID: 980368803, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  childSprites: []
 --- !u!114 &1209543114
 MonoBehaviour:
   m_ObjectHideFlags: 0

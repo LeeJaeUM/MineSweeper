@@ -6,9 +6,17 @@ using UnityEngine.InputSystem;
 public class Test_ImageNumber : TestBase
 {
     public ImageNumber imageNumber;
+    [Range(-99, 999)]
+    public int testInt = 0;
+
+    private void Awake()
+    {
+        imageNumber = FindAnyObjectByType<ImageNumber>();
+    }
+
     protected override void OnTest1(InputAction.CallbackContext context)
     {
-        imageNumber.NumberSelect(123);
+        StartCoroutine(Test());
     }
     protected override void OnTest2(InputAction.CallbackContext context)
     {
@@ -25,5 +33,16 @@ public class Test_ImageNumber : TestBase
     protected override void OnTest5(InputAction.CallbackContext context)
     {
         imageNumber.NumberSelect(-5);
+    }
+
+    IEnumerator Test()
+    {
+        int t = -99;
+        while(t < 1000)
+        {
+            imageNumber.NumberSelect(t);
+            yield return new WaitForSeconds(0.01f);
+            t++;
+        }
     }
 }
