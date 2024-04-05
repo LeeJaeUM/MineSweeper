@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ImageNumber : MonoBehaviour
 {
-    int number = 0;
+    int number = -1;
     public int Number
     {
         get => number;
@@ -32,6 +32,7 @@ public class ImageNumber : MonoBehaviour
     private void Awake()
     {
         childImages = GetComponentsInChildren<Image>();
+        Number = 0;
     }
 
     public void NumberSelect()
