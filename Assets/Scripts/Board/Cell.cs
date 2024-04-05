@@ -54,10 +54,13 @@ public class Cell : MonoBehaviour
 
         child = transform.GetChild(1);
         inside = child.GetComponent<SpriteRenderer>();
+
+
     }
 
     public void ResetData()
     {
+        Board = FindAnyObjectByType<Board>();
         hasMine = false;
         cover.sprite = Board[CloseCellType.Close];
         inside.sprite = Board[OpenCellType.Empty];

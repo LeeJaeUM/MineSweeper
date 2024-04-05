@@ -36,10 +36,10 @@ public class Board : MonoBehaviour
 
     PlayerInputActions inputAction;
 
-    public Sprite[] openCellImage = null;
+    public Sprite[] openCellImage;
     public Sprite this[OpenCellType type] => openCellImage[(int)type];
-    public Sprite[] closeCellImage = null;
-    public Sprite this[CloseCellType type] => openCellImage[(int)type];
+    public Sprite[] closeCellImage;
+    public Sprite this[CloseCellType type] => closeCellImage[(int)type];
 
     private void Awake()
     {
@@ -97,8 +97,16 @@ public class Board : MonoBehaviour
                 cellObj.name = $"Cell_{id}_({x},{y})";
             }
         }
-
         ResetBoard();
+        MineCreate();
+    }
+
+    private void MineCreate()
+    {
+        for(int x = 0; x < 10;x++)
+        {
+            cells[x].SetMine();
+        }
     }
 
     private void ResetBoard()
