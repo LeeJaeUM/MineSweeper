@@ -12,22 +12,5 @@ public class Test_Cell : TestBase
         cell = FindAnyObjectByType<Cell>();
     }
 
-    protected override void OnTest1(InputAction.CallbackContext context)
-    {
-        cell.InsideSpriteSelect();
-    }
 
-    protected override void OnTest2(InputAction.CallbackContext context)
-    {
-        cell.InsideSpriteSelect(true);
-    }
-
-    protected override void OnTest3(InputAction.CallbackContext context)
-    {
-        cell.Press();
-    }
-    protected override void OnTest4(InputAction.CallbackContext context)
-    {
-        cell.Close();
-    }
 }
