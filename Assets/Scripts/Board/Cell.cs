@@ -214,19 +214,44 @@ public class Cell : MonoBehaviour
     }
 
     public void LeftPress()
-    {
-        switch (CoverState)
+    {   
+        if (isOpen)
         {
-            case CellCoverState.None:
-                cover.sprite = Board[CloseCellType.ClosePress];
-                break;
-            case CellCoverState.Question:
-                cover.sprite = Board[CloseCellType.QuestionPress];
-                break;
-            //case CellCoverState.Flag:
-            default:
-                // 하는 일 없음
-                break;
+            Debug.Log("열린거 누름");
+            foreach (Cell cell in neighbors)
+            {
+                switch (CoverState)
+                {
+                    case CellCoverState.None:
+                        cell.cover.sprite = Board[CloseCellType.ClosePress];
+                        Debug.Log("닫힌거임");
+                        break;
+                    case CellCoverState.Question:
+                        cell.cover.sprite = Board[CloseCellType.QuestionPress];
+                        break;
+                    //case CellCoverState.Flag:
+                    default:
+                        // 하는 일 없음
+                        break;
+                }
+
+            }
+        }
+        else
+        {
+            switch (CoverState)
+            {
+                case CellCoverState.None:
+                    cover.sprite = Board[CloseCellType.ClosePress];
+                    break;
+                case CellCoverState.Question:
+                    cover.sprite = Board[CloseCellType.QuestionPress];
+                    break;
+                //case CellCoverState.Flag:
+                default:
+                    // 하는 일 없음
+                    break;
+            }
         }
     }
 
@@ -238,6 +263,18 @@ public class Cell : MonoBehaviour
 
     void Open()
     {
+        if(isOpen)
+        {
+            Debug.Log("열린거 열려함");
+            foreach( Cell cell in neighbors)
+            {
+                if (!cell.isOpen)
+                {
+                    cell.RestoreCover();
+                }
+            }
+        }
+
         if (!isOpen && !IsFlaged)
         {
             isOpen = true;
@@ -255,6 +292,9 @@ public class Cell : MonoBehaviour
                 Debug.Log("주금");
             }
         }
+
+
+
     }
 
     /// <summary>
