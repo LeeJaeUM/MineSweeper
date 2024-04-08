@@ -8,6 +8,24 @@ public class Cell : MonoBehaviour
     // 열기/닫기
     // 보드에 입력에 따른 cover 이미지 변경
 
+    public enum CellCoverState
+    {
+        None = 0,
+        Flag,
+        Op
+    }
+
+    CellCoverState coverState = CellCoverState.None;
+    public CellCoverState CoverState
+    {
+        get => coverState;
+        set
+        {
+            if (coverState != value)
+                coverState = value;
+        }
+    }
+
     /// <summary>
     /// 이 셀의 ID(위치계산에도 사용될 수 있음)
     /// </summary>
@@ -137,7 +155,12 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void CellRightPress()
     {
-
+        switch(coverState)
+        {
+            case CellCoverState.None: break;
+            case CellCoverState.Flag: break;
+            case CellCoverState.Op: break;
+        }
     }
 
 #if UNITY_EDITOR

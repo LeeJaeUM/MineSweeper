@@ -284,6 +284,12 @@ public class Board : MonoBehaviour
         return result;
     }
 
+    public void CellRightPass()
+    {
+       
+    }
+
+
 #if UNITY_EDITOR
     public void Test_OpenAllCover()
     {
