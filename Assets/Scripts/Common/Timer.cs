@@ -28,8 +28,8 @@ public class Timer : MonoBehaviour
         manager.onGameReady += TimerReset;
         manager.onGamePlay += TimerReset;
         manager.onGamePlay += Play;
-        manager.onGameClear += Stop;
-        manager.onGameOver += Stop;
+        manager.onGameGameClear += Stop;
+        manager.onGameGameOver += Stop;
 
         timeCoroutine = Timer_Co();
     }

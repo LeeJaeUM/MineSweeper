@@ -23,12 +23,12 @@ public class Test_Counter : TestBase
 
     private void Update()
     {
-        GameManager.Instance.TestFlagCounter(testInt);
+      //  GameManager.Instance.TestFlagCounter(testInt);
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)
     {
-        GameManager.Instance.Test_StateChange(gamestate);
+       // GameManager.Instance.Test_StateChange(gamestate);
     }
 
 }

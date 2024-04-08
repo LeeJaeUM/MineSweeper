@@ -182,9 +182,11 @@ public class Cell : MonoBehaviour
         {
             case CellCoverState.None:
                 CoverState = CellCoverState.Flag;
+                GameManager.Instance.IncreaseFlagCount();
                 break;
             case CellCoverState.Flag:
                 CoverState = CellCoverState.Question;
+                GameManager.Instance.DecreaseFlagCount();
                 break;
             case CellCoverState.Question:
                 CoverState = CellCoverState.None;
