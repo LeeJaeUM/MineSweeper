@@ -38,6 +38,25 @@ public class Board : MonoBehaviour
     const float Distance = 1.0f;
 
     /// <summary>
+    /// 현재 마우스가 누르고 있는 셀
+    /// </summary>
+    Cell currentCell = null;
+    public Cell CurrentCell
+    {
+        get => currentCell;
+        set
+        {
+            if(currentCell !=  value)
+            {
+                currentCell?.RestoreCover();
+                currentCell = value;
+                currentCell?.LeftPress();
+            }
+        }
+    }
+
+
+    /// <summary>
     /// 인풋시스템을 위한 인풋액션
     /// </summary>
     PlayerInputActions inputActions;
@@ -222,7 +241,6 @@ public class Board : MonoBehaviour
     {
         Vector2 screen = Mouse.current.position.ReadValue();
         //Debug.Log( GetCell(screen)?.gameObject.name );
-
         Cell cell = GetCell(screen);
         cell?.LeftPress();
 
@@ -253,7 +271,11 @@ public class Board : MonoBehaviour
 
     private void OnMouseMove(InputAction.CallbackContext context)
     {
-        Vector2 screen = context.ReadValue<Vector2>();
+        if(Mouse.current.leftButton.isPressed)  //마우스 왼쪽 버튼 눌려진 상태 확인
+        {
+            Vector2 screen = context.ReadValue<Vector2>();
+            CurrentCell = GetCell(screen);
+        }
     }
 
     // 기타 유틸리티 함수들 ------------------------------------------------------------------------------
