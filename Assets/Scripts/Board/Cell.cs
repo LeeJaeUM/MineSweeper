@@ -76,18 +76,6 @@ public class Cell : MonoBehaviour
     /// 셀이 열렸는지 여부
     /// </summary>
     bool isOpen = false;
-    public bool IsOpen
-    {
-        get => isOpen;
-        set
-        {
-            IsOpen = value;
-            if(isOpen)
-            {
-
-            }
-        }
-    }
 
     /// <summary>
     /// 셀의 커버 표시 상태용(닫혔을 때의 상태)
@@ -132,8 +120,21 @@ public class Cell : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 깃발이 설치 되었음을 알리는 델리게이트
+    /// </summary>
     public Action onFlagUse;
+
+    /// <summary>
+    /// 깃발 설치가 취소 되었음을 알리는 델리게이트
+    /// </summary>
     public Action onFlagReturn;
+
+    /// <summary>
+    /// 깃발 설치 여부를 알려주는 프로퍼티
+    /// </summary>
+    public bool IsFlaged => CoverState == CellCoverState.Flag;
+
 
     private void Awake()
     {
@@ -194,7 +195,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 셀이 우클릭되면 실행되는 함수
     /// </summary>
-    public void CellRightPress()
+    public void RightPress()
     {
         switch (CoverState)
         {
@@ -212,16 +213,57 @@ public class Cell : MonoBehaviour
         }
     }
 
-    private void Open()
+    public void LeftPress()
     {
-
+        switch (CoverState)
+        {
+            case CellCoverState.None:
+                cover.sprite = Board[CloseCellType.ClosePress];
+                break;
+            case CellCoverState.Question:
+                cover.sprite = Board[CloseCellType.QuestionPress];
+                break;
+            //case CellCoverState.Flag:
+            default:
+                // 하는 일 없음
+                break;
+        }
     }
+
+    public void LeftRelease()
+    {
+        //RestoreCover();
+        Open();
+    }
+
+    void Open()
+    {
+        if (!isOpen && !IsFlaged)
+        {
+            isOpen = true;
+            cover.gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 원래 커버 이미지로 변경하는 함수
+    /// </summary>
     void RestoreCover()
     {
-
+        switch (CoverState)
+        {
+            case CellCoverState.None:
+                cover.sprite = Board[CloseCellType.Close];
+                break;
+            case CellCoverState.Question:
+                cover.sprite = Board[CloseCellType.Question];
+                break;
+            //case CellCoverState.Flag:
+            default:
+                // 하는 일 없음
+                break;
+        }
     }
-
-
 
 #if UNITY_EDITOR
     public void Test_OpenCover()

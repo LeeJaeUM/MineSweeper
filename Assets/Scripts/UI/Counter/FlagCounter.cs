@@ -7,7 +7,7 @@ public class FlagCounter : CounterBase
     private void Start()
     {
         GameManager.Instance.onFlagCountChange += Refresh;
-        Refresh(GameManager.Instance.mineCount);
+        Refresh(GameManager.Instance.FlagCount);
     }
 
 }

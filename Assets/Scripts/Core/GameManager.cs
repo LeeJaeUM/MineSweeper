@@ -92,7 +92,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 깃발 개수
     /// </summary>
-    int flagCount = 10;
+    int flagCount = 0;
 
     /// <summary>
     /// 깃발 개수 확인 및 설정용 프로퍼티
@@ -137,8 +137,11 @@ public class GameManager : Singleton<GameManager>
     // 게임 메니저 공용 함수 ----------------------------------------------------------------------------
     protected override void OnInitialize()
     {
+        // 보드 초기화
         board = FindAnyObjectByType<Board>();
         board.Initialize(boardWidth, boardHeight, mineCount);
+
+        FlagCount = mineCount;  // 깃발 개수 설정
     }
 
 
