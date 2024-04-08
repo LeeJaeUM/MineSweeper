@@ -8,24 +8,6 @@ public class Cell : MonoBehaviour
     // 열기/닫기
     // 보드에 입력에 따른 cover 이미지 변경
 
-    public enum CellCoverState
-    {
-        None = 0,
-        Flag,
-        Op
-    }
-
-    CellCoverState coverState = CellCoverState.None;
-    public CellCoverState CoverState
-    {
-        get => coverState;
-        set
-        {
-            if (coverState != value)
-                coverState = value;
-        }
-    }
-
     /// <summary>
     /// 이 셀의 ID(위치계산에도 사용될 수 있음)
     /// </summary>
@@ -94,6 +76,47 @@ public class Cell : MonoBehaviour
     /// </summary>
     bool isOpen = false;
 
+    /// <summary>
+    /// 셀의 커버 표시 상태용(닫혔을 때의 상태)
+    /// </summary>
+    enum CellCoverState
+    {
+        None = 0,   // 아무것도 표시되지 않은 상태
+        Flag,       // 깃발이 표시된 상태
+        Question    // 물음표가 표시된 상태
+    }
+
+    /// <summary>
+    /// 셀의 커버 상태
+    /// </summary>
+    CellCoverState coverState = CellCoverState.None;
+
+    /// <summary>
+    /// 셀의 커버 상태를 설정하고 확인하기 위한 프로퍼티
+    /// </summary>
+    CellCoverState CoverState
+    {
+        get => coverState;
+        set
+        {
+            coverState = value;
+            switch (coverState)
+            {
+                case CellCoverState.None:
+                    cover.sprite = Board[CloseCellType.Close];
+                    break;
+                case CellCoverState.Flag:
+                    cover.sprite = Board[CloseCellType.Flag];
+                    break;
+                case CellCoverState.Question:
+                    cover.sprite = Board[CloseCellType.Question];
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     private void Awake()
     {
         Transform child = transform.GetChild(0);
@@ -155,11 +178,19 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void CellRightPress()
     {
-        switch(coverState)
+        switch (CoverState)
         {
-            case CellCoverState.None: break;
-            case CellCoverState.Flag: break;
-            case CellCoverState.Op: break;
+            case CellCoverState.None:
+                CoverState = CellCoverState.Flag;
+                break;
+            case CellCoverState.Flag:
+                CoverState = CellCoverState.Question;
+                break;
+            case CellCoverState.Question:
+                CoverState = CellCoverState.None;
+                break;
+            default:
+                break;
         }
     }
 
