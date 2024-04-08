@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime;
@@ -75,6 +76,18 @@ public class Cell : MonoBehaviour
     /// 셀이 열렸는지 여부
     /// </summary>
     bool isOpen = false;
+    public bool IsOpen
+    {
+        get => isOpen;
+        set
+        {
+            IsOpen = value;
+            if(isOpen)
+            {
+
+            }
+        }
+    }
 
     /// <summary>
     /// 셀의 커버 표시 상태용(닫혔을 때의 상태)
@@ -107,15 +120,20 @@ public class Cell : MonoBehaviour
                     break;
                 case CellCoverState.Flag:
                     cover.sprite = Board[CloseCellType.Flag];
+                    onFlagUse?.Invoke();
                     break;
                 case CellCoverState.Question:
                     cover.sprite = Board[CloseCellType.Question];
+                    onFlagReturn?.Invoke();
                     break;
                 default:
                     break;
             }
         }
     }
+
+    public Action onFlagUse;
+    public Action onFlagReturn;
 
     private void Awake()
     {
@@ -182,11 +200,9 @@ public class Cell : MonoBehaviour
         {
             case CellCoverState.None:
                 CoverState = CellCoverState.Flag;
-                GameManager.Instance.IncreaseFlagCount();
                 break;
             case CellCoverState.Flag:
                 CoverState = CellCoverState.Question;
-                GameManager.Instance.DecreaseFlagCount();
                 break;
             case CellCoverState.Question:
                 CoverState = CellCoverState.None;
@@ -195,6 +211,17 @@ public class Cell : MonoBehaviour
                 break;
         }
     }
+
+    private void Open()
+    {
+
+    }
+    void RestoreCover()
+    {
+
+    }
+
+
 
 #if UNITY_EDITOR
     public void Test_OpenCover()

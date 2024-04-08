@@ -92,7 +92,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 깃발 개수
     /// </summary>
-    int flagCount = 0;
+    int flagCount = 10;
 
     /// <summary>
     /// 깃발 개수 확인 및 설정용 프로퍼티
