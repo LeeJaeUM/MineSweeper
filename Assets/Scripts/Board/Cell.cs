@@ -135,6 +135,7 @@ public class Cell : MonoBehaviour
     /// </summary>
     public bool IsFlaged => CoverState == CellCoverState.Flag;
 
+    List<Cell> pressedCells = null;
 
     private void Awake()
     {
@@ -197,49 +198,43 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void RightPress()
     {
-        switch (CoverState)
+        if (!isOpen)
         {
-            case CellCoverState.None:
-                CoverState = CellCoverState.Flag;
-                break;
-            case CellCoverState.Flag:
-                CoverState = CellCoverState.Question;
-                break;
-            case CellCoverState.Question:
-                CoverState = CellCoverState.None;
-                break;
-            default:
-                break;
+            switch (CoverState)
+            {
+                case CellCoverState.None:
+                    CoverState = CellCoverState.Flag;
+                    break;
+                case CellCoverState.Flag:
+                    CoverState = CellCoverState.Question;
+                    break;
+                case CellCoverState.Question:
+                    CoverState = CellCoverState.None;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
     public void LeftPress()
     {   
-        if (isOpen)
+        if (isOpen)                             //열린 셀을 눌렀을떄
         {
-            Debug.Log("열린거 누름");
+            pressedCells.Clear();
             foreach (Cell cell in neighbors)
             {
-                switch (CoverState)
+                if(!cell.isOpen && !cell.IsFlaged)
                 {
-                    case CellCoverState.None:
-                        cell.cover.sprite = Board[CloseCellType.ClosePress];
-                        Debug.Log("닫힌거임");
-                        break;
-                    case CellCoverState.Question:
-                        cell.cover.sprite = Board[CloseCellType.QuestionPress];
-                        break;
-                    //case CellCoverState.Flag:
-                    default:
-                        // 하는 일 없음
-                        break;
+                    pressedCells.Add(cell);
+                    cell.LeftPress();
                 }
 
             }
         }
         else
-        {
-            switch (CoverState)
+        {                                       //닫힌 셀을 눌렀을때
+            switch (CoverState)                 //커버 상태에 따라 변경
             {
                 case CellCoverState.None:
                     cover.sprite = Board[CloseCellType.ClosePress];
@@ -252,35 +247,63 @@ public class Cell : MonoBehaviour
                     // 하는 일 없음
                     break;
             }
+            pressedCells.Add(this);
         }
     }
 
     public void LeftRelease()
     {
         //RestoreCover();
-        Open();
+        if(isOpen)
+        {
+            int flagCount = 0;
+            foreach(Cell cell in neighbors)
+            {
+                if(cell.IsFlaged)
+                    flagCount++;
+            }
+            if(aroundMineCount == flagCount)
+            {
+                foreach (Cell cell in neighbors)
+                {
+                    cell.Open();
+                }
+            }
+            else
+            {
+                RestoreCover();
+            }
+        }
+        else
+        {
+            Open();
+        }
     }
 
     void Open()
     {
-        if(isOpen)
-        {
-            Debug.Log("열린거 열려함");
-            foreach( Cell cell in neighbors)
-            {
-                if (!cell.isOpen)
-                {
-                    cell.RestoreCover();
-                }
-            }
-        }
+        //if(isOpen)
+        //{
+        //    //Debug.Log("열린거 열려함");
+        //    foreach( Cell cell in neighbors)
+        //    {
+        //        if (!cell.isOpen)
+        //        {
+        //            cell.RestoreCover();
+        //        }
+        //    }
+        //}
 
         if (!isOpen && !IsFlaged)
         {
             isOpen = true;
             cover.gameObject.SetActive(false);
 
-            if(aroundMineCount <= 0)
+            if (HasMine)
+            {
+                Debug.Log("게임 오버어어어");
+            }
+            else if(aroundMineCount <= 0)
             {
                 foreach(Cell cell in neighbors)
                 {
