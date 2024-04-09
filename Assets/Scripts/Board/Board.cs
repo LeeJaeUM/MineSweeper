@@ -174,6 +174,19 @@ public class Board : MonoBehaviour
     private void OnGameOver()
     {
         Debug.Log("게임오버 신호를 받음");
+        //
+        foreach(Cell cell in cells)
+        {
+            if(cell.IsFlaged && !cell.HasMine)
+            {
+                //잘못 설치한 깃발 스프라이트 변경
+                cell.FlagMistake();
+            }
+            else if (!cell.IsFlaged && cell.HasMine)
+            {
+                cell.MineNotFount();
+            }
+        }
     }
 
 

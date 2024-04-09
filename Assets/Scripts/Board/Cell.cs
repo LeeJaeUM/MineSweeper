@@ -312,6 +312,7 @@ public class Cell : MonoBehaviour
             if (hasMine)                        // 지뢰가 있다.
             {
                 //Debug.Log("게임 오버");
+                inside.sprite = Board[OpenCellType.Mine_Explotion];
                 onExplosion?.Invoke();
             }
             else if (aroundMineCount <= 0)      // 지뢰가 없고 주변 지뢰개수가 0이하다.(비어있는 셀)
@@ -322,6 +323,17 @@ public class Cell : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void FlagMistake()
+    {
+        cover.gameObject.SetActive(false);
+        inside.sprite = Board[OpenCellType.Mine_Mistake];
+    }
+
+    public void MineNotFount()
+    {
+        cover.gameObject.SetActive(false);
     }
 
     /// <summary>
