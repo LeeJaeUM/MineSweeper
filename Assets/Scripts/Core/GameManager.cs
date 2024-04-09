@@ -155,7 +155,7 @@ public class GameManager : Singleton<GameManager>
 
     public void GameClear()
     {
-
+        State = GameState.GameClear;
     }
 
 

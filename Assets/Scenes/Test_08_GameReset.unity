@@ -305,6 +305,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 957555144379576887, guid: c58e76284c1cf3140b19996c81068882, type: 3}
+      propertyPath: mineCount
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3341597766430347781, guid: c58e76284c1cf3140b19996c81068882, type: 3}
       propertyPath: m_LocalPosition.x
       value: 957.3248
@@ -363,7 +367,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1618225747}
-  - component: {fileID: 1618225746}
+  - component: {fileID: 1618225748}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -371,19 +375,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1618225746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1618225745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc80f3f00485d6c47b1513eae663f70a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  seed: -1
 --- !u!4 &1618225747
 Transform:
   m_ObjectHideFlags: 0
@@ -399,6 +390,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1618225748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618225745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82b836227f953bd4f9eafebe61ad43a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seed: -1
+  width: 8
+  height: 8
+  mineCount: 3
 --- !u!1 &1885980668
 GameObject:
   m_ObjectHideFlags: 0

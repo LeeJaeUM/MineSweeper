@@ -292,14 +292,22 @@ public class Board : MonoBehaviour
         }
     }
 
+    public int testcheck = 0;
     private void OnLeftRelease(InputAction.CallbackContext context)
     {
         Vector2 screen = Mouse.current.position.ReadValue();
-        Cell cell = GetCell(screen);
-        cell?.LeftRelease();
         if (gameManager.IsPlaying)
         {
             onBoardLeftRelease?.Invoke();
+        }
+        Cell cell = GetCell(screen);
+        if(cell != null)
+        {
+            cell.LeftRelease();
+            if(testcheck == mineCount)
+            {
+                gameManager.GameClear();
+            }
         }
     }
 
@@ -313,6 +321,17 @@ public class Board : MonoBehaviour
         {
             gameManager.GameStart();
             cell.RightPress();
+            if (cell.HasMine)
+            {
+                if(!cell.IsFlaged)
+                {
+                    testcheck--;
+                }
+                else
+                {
+                    testcheck++;
+                }
+            }
         }
     }
 

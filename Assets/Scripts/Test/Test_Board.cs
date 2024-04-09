@@ -18,10 +18,13 @@ public class Test_Board : TestBase
 
     protected override void OnTest1(InputAction.CallbackContext context)
     {
-        board.Initialize(width, height, mineCount);
-    }   
+        //board.Initialize(width, height, mineCount);
+        board.Test_OpenAllCover();
+    }
+
     protected override void OnTest2(InputAction.CallbackContext context)
     {
+       // board.Test_BoardReset();
         board.Test_OpenAllCover();
     }
 }
