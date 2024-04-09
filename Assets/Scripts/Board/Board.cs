@@ -41,20 +41,23 @@ public class Board : MonoBehaviour
     /// 현재 마우스가 누르고 있는 셀
     /// </summary>
     Cell currentCell = null;
-    public Cell CurrentCell
+
+    /// <summary>
+    /// 현재 마우스가 누르고 있는 셀을 확인하고 설정하는 프로퍼티
+    /// </summary>
+    Cell CurrentCell
     {
         get => currentCell;
         set
         {
-            if(currentCell !=  value)
+            if (currentCell != value)            // currentCell이 변경되면
             {
-                currentCell?.RestoreCover();
+                currentCell?.RestoreCovers();   // 이전 currentCell이 눌려놓았던 것을 모두 원래대로 복구
                 currentCell = value;
-                currentCell?.LeftPress();
+                currentCell?.LeftPress();       // 새 currentCell에 누르기 처리
             }
         }
     }
-
 
     /// <summary>
     /// 인풋시스템을 위한 인풋액션
@@ -65,7 +68,6 @@ public class Board : MonoBehaviour
     public Sprite this[OpenCellType type] => openCellImage[(int)type];
     public Sprite[] closeCellImage;
     public Sprite this[CloseCellType type] => closeCellImage[(int)type];
-
 
     /// <summary>
     /// 게임 매니저
@@ -119,20 +121,20 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                GameObject cellObj = Instantiate(cellPrefab, transform);
+                GameObject cellObj = Instantiate(cellPrefab, transform);    // 셀 게임 오브젝트 생성
                 Cell cell = cellObj.GetComponent<Cell>();
 
                 int id = x + y * width;
-                cell.ID = id;
-                cell.transform.localPosition = new Vector3(x * Distance, -y * Distance);
-                cell.Board = this;
+                cell.ID = id;               // ID 설정
+                cell.transform.localPosition = new Vector3(x * Distance, -y * Distance);    // 위치 설정
+                cell.Board = this;          // Board 기록해 두기
 
-                cell.onFlagUse += gameManager.DecreaseFlagCount;
-                cell.onFlagReturn += gameManager.IncreaseFlagCount;
+                cell.onFlagUse += gameManager.DecreaseFlagCount;        // 셀에 깃발 설치됬을 때 실행될 함수 연결
+                cell.onFlagReturn += gameManager.IncreaseFlagCount;     // 셀의 깃발이 제거되었을 떄 실행될 함수 연결
 
-                cellObj.name = $"Cell_{id}_({x},{y})";
+                cellObj.name = $"Cell_{id}_({x},{y})";      // 게임 오브젝트의 이름을 알아보기 쉽게 변경
 
-                cells[id] = cell;
+                cells[id] = cell;   // 셀을 배열에 저장
             }
         }
 
@@ -241,15 +243,9 @@ public class Board : MonoBehaviour
     {
         Vector2 screen = Mouse.current.position.ReadValue();
         //Debug.Log( GetCell(screen)?.gameObject.name );
+
         Cell cell = GetCell(screen);
         cell?.LeftPress();
-
-        /*
-         * 눌렀을 때 커버가 변경됨
-             - None : Cell_ClosePress가 보여야 한다.
-             - Flag : 변화가 없다.
-             - Question : Cell_Close_QuestionPress가 보여야 한다.
-         */
     }
 
     private void OnLeftRelease(InputAction.CallbackContext context)
@@ -271,11 +267,13 @@ public class Board : MonoBehaviour
 
     private void OnMouseMove(InputAction.CallbackContext context)
     {
-        if(Mouse.current.leftButton.isPressed)  //마우스 왼쪽 버튼 눌려진 상태 확인
+        if (Mouse.current.leftButton.isPressed)  // 마우스 왼쪽버튼 눌려진 상태 확인
         {
             Vector2 screen = context.ReadValue<Vector2>();
-            CurrentCell = GetCell(screen);
+            Cell cell = GetCell(screen);
+            CurrentCell = cell;
         }
+
     }
 
     // 기타 유틸리티 함수들 ------------------------------------------------------------------------------
