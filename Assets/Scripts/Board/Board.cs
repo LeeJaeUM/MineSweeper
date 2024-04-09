@@ -131,6 +131,7 @@ public class Board : MonoBehaviour
 
                 cell.onFlagUse += gameManager.DecreaseFlagCount;        // 셀에 깃발 설치됬을 때 실행될 함수 연결
                 cell.onFlagReturn += gameManager.IncreaseFlagCount;     // 셀의 깃발이 제거되었을 떄 실행될 함수 연결
+                cell.onExplosion += gameManager.GameOver;
 
                 cellObj.name = $"Cell_{id}_({x},{y})";      // 게임 오브젝트의 이름을 알아보기 쉽게 변경
 
@@ -143,6 +144,8 @@ public class Board : MonoBehaviour
         {
             cell.Initialize();
         }
+
+        gameManager.onGameOver += OnGameOver;
 
         // 보드 데이터 리셋
         ResetBoard();
@@ -166,6 +169,14 @@ public class Board : MonoBehaviour
             cells[shuffleResult[i]].SetMine();
         }
     }
+
+
+    private void OnGameOver()
+    {
+        Debug.Log("게임오버 신호를 받음");
+    }
+
+
 
     // 셀 확인용 함수들 ------------------------------------------------------------------------------------
 

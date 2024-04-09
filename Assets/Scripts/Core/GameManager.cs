@@ -43,10 +43,10 @@ public class GameManager : Singleton<GameManager>
                         onGamePlay?.Invoke();
                         break;
                     case GameState.GameClear:
-                        onGameGameClear?.Invoke();
+                        onGameClear?.Invoke();
                         break;
                     case GameState.GameOver:
-                        onGameGameOver?.Invoke();
+                        onGameOver?.Invoke();
                         break;
                 }
             }
@@ -56,8 +56,8 @@ public class GameManager : Singleton<GameManager>
     // 상태 변경 알림용 프로퍼티
     public Action onGameReady;
     public Action onGamePlay;
-    public Action onGameGameClear;
-    public Action onGameGameOver;
+    public Action onGameClear;
+    public Action onGameOver;
 
     // 보드 생성 관련 --------------------------------------------------------------------------------------
 
@@ -133,6 +133,22 @@ public class GameManager : Singleton<GameManager>
 
     // -----------------------------------------------------------------------------------------------
 
+    public void GameStart()
+    {
+
+    }
+    public void GameReset()
+    {
+
+    }
+    public void GameOver()
+    {
+        State = GameState.GameOver;
+    }
+    public void GameClear()
+    {
+
+    }
 
     // 게임 메니저 공용 함수 ----------------------------------------------------------------------------
     protected override void OnInitialize()
