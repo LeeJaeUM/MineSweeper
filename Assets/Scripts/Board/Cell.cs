@@ -39,7 +39,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 셀에 지뢰가 있는지 여부
     /// </summary>
-    bool hasMine = false;
+    [SerializeField]bool hasMine = false;
 
     /// <summary>
     /// 지뢰 설치 여부를 확인하기 위한 프로퍼티
@@ -90,7 +90,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 셀의 커버 상태
     /// </summary>
-    CellCoverState coverState = CellCoverState.None;
+    [SerializeField] CellCoverState coverState = CellCoverState.None;
 
     /// <summary>
     /// 셀의 커버 상태를 설정하고 확인하기 위한 프로퍼티

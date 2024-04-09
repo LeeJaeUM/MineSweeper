@@ -21,7 +21,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 현재 게임 상태
     /// </summary>
-    GameState state = GameState.Ready;
+    [SerializeField]GameState state = GameState.Ready;
 
     /// <summary>
     /// 상태 변경 및 확인용 프로퍼티
@@ -151,7 +151,7 @@ public class GameManager : Singleton<GameManager>
     }
     public void GameClear()
     {
-
+        State = GameState.GameClear;
     }
 
     // 게임 메니저 공용 함수 ----------------------------------------------------------------------------

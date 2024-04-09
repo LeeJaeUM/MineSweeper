@@ -55,9 +55,13 @@ public class Board : MonoBehaviour
                 currentCell?.RestoreCovers();   // 이전 currentCell이 눌려놓았던 것을 모두 원래대로 복구
                 currentCell = value;
                 currentCell?.LeftPress();       // 새 currentCell에 누르기 처리
+
             }
         }
     }
+
+    public Action onCellPress;
+    public Action onCellRelease;
 
     /// <summary>
     /// 인풋시스템을 위한 인풋액션
@@ -272,6 +276,7 @@ public class Board : MonoBehaviour
         Cell cell = GetCell(screen);
         if(cell != null)
         {
+            onCellPress();
             gameManager.GameStart();
             cell.LeftPress();
         }
@@ -281,7 +286,25 @@ public class Board : MonoBehaviour
     {
         Vector2 screen = Mouse.current.position.ReadValue();
         Cell cell = GetCell(screen);
-        cell?.LeftRelease();
+        if(cell != null)
+        {
+            cell.LeftRelease();
+            onCellRelease();
+
+            int checkCount = 0;
+            foreach(Cell cell2 in cells)
+            {
+                if (cell2.HasMine && cell2.IsFlaged)
+                {
+                    checkCount++;
+                }
+            }
+
+            if(checkCount == mineCount) 
+            { 
+                gameManager.GameClear();
+            }
+        }
 
     }
 
