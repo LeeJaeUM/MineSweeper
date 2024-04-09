@@ -39,7 +39,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 셀에 지뢰가 있는지 여부
     /// </summary>
-    [SerializeField]bool hasMine = false;
+    bool hasMine = false;
 
     /// <summary>
     /// 지뢰 설치 여부를 확인하기 위한 프로퍼티
@@ -61,6 +61,11 @@ public class Cell : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 게임이 플레이중인지 확인하는 프로퍼티
+    /// </summary>
+    bool IsPlaying => Board.IsPlaying;
 
     /// <summary>
     /// 자기 주변 셀의 목록
@@ -90,7 +95,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 셀의 커버 상태
     /// </summary>
-    [SerializeField] CellCoverState coverState = CellCoverState.None;
+    CellCoverState coverState = CellCoverState.None;
 
     /// <summary>
     /// 셀의 커버 상태를 설정하고 확인하기 위한 프로퍼티
@@ -121,6 +126,16 @@ public class Cell : MonoBehaviour
     }
 
     /// <summary>
+    /// 깃발 설치 여부를 알려주는 프로퍼티
+    /// </summary>
+    public bool IsFlaged => CoverState == CellCoverState.Flag;
+
+    /// <summary>
+    /// 이 셀에 의해 눌려진 셀의 목록(자기자신 or 자기주변에 닫혀 있던 셀들)
+    /// </summary>
+    List<Cell> pressedCells;
+
+    /// <summary>
     /// 깃발이 설치 되었음을 알리는 델리게이트
     /// </summary>
     public Action onFlagUse;
@@ -131,15 +146,8 @@ public class Cell : MonoBehaviour
     public Action onFlagReturn;
 
     /// <summary>
-    /// 깃발 설치 여부를 알려주는 프로퍼티
+    /// 지뢰가 터졌음을 알리는 델리게이트
     /// </summary>
-    public bool IsFlaged => CoverState == CellCoverState.Flag;
-
-    /// <summary>
-    /// 이 셀에 의해 눌려진 셀의 목록(자기자신 or 자기주변에 닫혀 있던 셀들)
-    /// </summary>
-    List<Cell> pressedCells;
-
     public Action onExplosion;
 
     private void Awake()
@@ -208,19 +216,22 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void RightPress()
     {
-        switch (CoverState)
+        if (IsPlaying && !isOpen)    // 게임 플레이 중이고 닫혀 있을 때만 실생
         {
-            case CellCoverState.None:
-                CoverState = CellCoverState.Flag;
-                break;
-            case CellCoverState.Flag:
-                CoverState = CellCoverState.Question;
-                break;
-            case CellCoverState.Question:
-                CoverState = CellCoverState.None;
-                break;
-            default:
-                break;
+            switch (CoverState)
+            {
+                case CellCoverState.None:
+                    CoverState = CellCoverState.Flag;
+                    break;
+                case CellCoverState.Flag:
+                    CoverState = CellCoverState.Question;
+                    break;
+                case CellCoverState.Question:
+                    CoverState = CellCoverState.None;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -230,37 +241,40 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void LeftPress()
     {
-        pressedCells.Clear();   // 눌려진 셀들 초기화
-
-        if (isOpen)
+        if (IsPlaying)
         {
-            // 열려있는 셀을 눌렀을 때
-            foreach (var cell in neighbors)          // 모든 이웃 셀에 대해
+            pressedCells.Clear();   // 눌려진 셀들 초기화
+
+            if (isOpen)
             {
-                if (!cell.isOpen && !cell.IsFlaged)  // 닫혀있고 깃발표시가 안되어 있는 셀만
+                // 열려있는 셀을 눌렀을 때
+                foreach (var cell in neighbors)          // 모든 이웃 셀에 대해
                 {
-                    pressedCells.Add(cell);         // 눌려진 셀로 기록
-                    cell.LeftPress();               // 누르는 처리 실행
+                    if (!cell.isOpen && !cell.IsFlaged)  // 닫혀있고 깃발표시가 안되어 있는 셀만
+                    {
+                        pressedCells.Add(cell);         // 눌려진 셀로 기록
+                        cell.LeftPress();               // 누르는 처리 실행
+                    }
                 }
             }
-        }
-        else
-        {
-            // 닫혀있는 셀을 눌렀을 때
-            switch (CoverState)         // 커버 상태에 따라 눌려진 이미지로 변경
+            else
             {
-                case CellCoverState.None:
-                    cover.sprite = Board[CloseCellType.ClosePress];
-                    break;
-                case CellCoverState.Question:
-                    cover.sprite = Board[CloseCellType.QuestionPress];
-                    break;
-                //case CellCoverState.Flag:
-                default:
-                    // 하는 일 없음
-                    break;
+                // 닫혀있는 셀을 눌렀을 때
+                switch (CoverState)         // 커버 상태에 따라 눌려진 이미지로 변경
+                {
+                    case CellCoverState.None:
+                        cover.sprite = Board[CloseCellType.ClosePress];
+                        break;
+                    case CellCoverState.Question:
+                        cover.sprite = Board[CloseCellType.QuestionPress];
+                        break;
+                    //case CellCoverState.Flag:
+                    default:
+                        // 하는 일 없음
+                        break;
+                }
+                pressedCells.Add(this);     // 눌려진 셀로 기록
             }
-            pressedCells.Add(this);     // 눌려진 셀로 기록
         }
     }
 
@@ -270,32 +284,35 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void LeftRelease()
     {
-        if (isOpen)
+        if (IsPlaying)
         {
-            // 열려 있는 셀의 경우(주변셀 누르기)
-            int flagCount = 0;
-            foreach (var cell in neighbors)          // 주변 깃발 개수 카운팅
+            if (isOpen)
             {
-                if (cell.IsFlaged)
-                    flagCount++;
-            }
-
-            if (aroundMineCount == flagCount)        // 주변 지뢰 개수와 깃발 개수가 같으면
-            {
-                foreach (var cell in pressedCells)
+                // 열려 있는 셀의 경우(주변셀 누르기)
+                int flagCount = 0;
+                foreach (var cell in neighbors)          // 주변 깃발 개수 카운팅
                 {
-                    cell.Open();    // 눌려진 셀을 전부 연다.
+                    if (cell.IsFlaged)
+                        flagCount++;
+                }
+
+                if (aroundMineCount == flagCount)        // 주변 지뢰 개수와 깃발 개수가 같으면
+                {
+                    foreach (var cell in pressedCells)
+                    {
+                        cell.Open();    // 눌려진 셀을 전부 연다.
+                    }
+                }
+                else
+                {
+                    RestoreCovers();    // 주변 지뢰 개수와 깃발 개수가 다르면 눌려진 셀을 전부 복구
                 }
             }
             else
             {
-                RestoreCovers();    // 주변 지뢰 개수와 깃발 개수가 다르면 눌려진 셀을 전부 복구
+                // 닫혀 있는 셀의 경우
+                Open();     // 그냥 열기
             }
-        }
-        else
-        {
-            // 닫혀 있는 셀의 경우
-            Open();     // 그냥 열기
         }
     }
 
@@ -312,8 +329,8 @@ public class Cell : MonoBehaviour
             if (hasMine)                        // 지뢰가 있다.
             {
                 //Debug.Log("게임 오버");
-                inside.sprite = Board[OpenCellType.Mine_Explotion];
-                onExplosion?.Invoke();
+                inside.sprite = Board[OpenCellType.Mine_Explotion]; // 터지는 이미지로 변경
+                onExplosion?.Invoke();          // 지뢰가 터짐을 알림
             }
             else if (aroundMineCount <= 0)      // 지뢰가 없고 주변 지뢰개수가 0이하다.(비어있는 셀)
             {
@@ -323,17 +340,6 @@ public class Cell : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void FlagMistake()
-    {
-        cover.gameObject.SetActive(false);
-        inside.sprite = Board[OpenCellType.Mine_Mistake];
-    }
-
-    public void MineNotFount()
-    {
-        cover.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -366,6 +372,23 @@ public class Cell : MonoBehaviour
             cell.RestoreCover();
         }
         pressedCells.Clear();
+    }
+
+    /// <summary>
+    /// 지뢰가 아닌데 지뢰로 잘못 설정했을 때 표시용
+    /// </summary>
+    public void FlagMistake()
+    {
+        cover.gameObject.SetActive(false);
+        inside.sprite = Board[OpenCellType.Mine_Mistake];
+    }
+
+    /// <summary>
+    /// 지뢰인데 못찾았을 때 표시용
+    /// </summary>
+    public void MineNotFound()
+    {
+        cover.gameObject.SetActive(false);
     }
 
 

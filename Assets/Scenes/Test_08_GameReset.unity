@@ -600,11 +600,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22f7d0c2b77a83a4ca9c89f3845e10cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resetbuttonSprite:
+  buttonSprites:
   - {fileID: -1269378960, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
   - {fileID: 1213883643, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
-  - {fileID: 1806013705, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
   - {fileID: 1233964531, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1806013705, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
 --- !u!1001 &1006594601466681485
 PrefabInstance:
   m_ObjectHideFlags: 0

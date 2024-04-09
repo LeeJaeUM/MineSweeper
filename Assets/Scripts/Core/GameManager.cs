@@ -21,7 +21,7 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 현재 게임 상태
     /// </summary>
-    [SerializeField]GameState state = GameState.Ready;
+    GameState state = GameState.Ready;
 
     /// <summary>
     /// 상태 변경 및 확인용 프로퍼티
@@ -37,7 +37,7 @@ public class GameManager : Singleton<GameManager>
                 switch (state)
                 {
                     case GameState.Ready:
-                        flagCount = mineCount;
+                        FlagCount = mineCount;
                         onGameReady?.Invoke();      // 델리게이트 실행
                         break;
                     case GameState.Play:
@@ -53,6 +53,8 @@ public class GameManager : Singleton<GameManager>
             }
         }
     }
+
+    public bool IsPlaying => State == GameState.Play;
 
     // 상태 변경 알림용 프로퍼티
     public Action onGameReady;
@@ -132,27 +134,31 @@ public class GameManager : Singleton<GameManager>
         FlagCount--;
     }
 
-    // -----------------------------------------------------------------------------------------------
-
+    // 게임 상태 관련 -----------------------------------------------------------------------------------
     public void GameStart()
     {
-        if (State == GameState.Ready)
+        if (State == GameState.Ready)  // 레디 상태일 때만 시작 가능
         {
             State = GameState.Play;
         }
     }
+
     public void GameReset()
     {
         State = GameState.Ready;
     }
+
     public void GameOver()
     {
         State = GameState.GameOver;
     }
+
     public void GameClear()
     {
-        State = GameState.GameClear;
+
     }
+
+
 
     // 게임 메니저 공용 함수 ----------------------------------------------------------------------------
     protected override void OnInitialize()

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,21 +5,33 @@ using UnityEngine.UI;
 
 public class ResetButton : MonoBehaviour
 {
-    Button button;
-    GameManager gameManager;
-    Board board;
-    Image image;
-
-    public enum ResetButtonType
+    enum ButtonState
     {
-        Smile = 0,
+        Normal = 0,
         Surprise,
-        GameOver,
-        GameClear
+        GameClear,
+        GameOver
     };
 
-    public Sprite[] resetbuttonSprite;
-    public Sprite this[ResetButtonType type] => resetbuttonSprite[(int)type];
+    ButtonState state = ButtonState.Normal;
+    ButtonState State
+    {
+        get => state;
+        set
+        {
+            if (state != value)
+            {
+                state = value;
+                image.sprite = buttonSprites[(int)state];
+            }
+
+        }
+    }
+
+    public Sprite[] buttonSprites;
+
+    Button button;
+    Image image;
 
     private void Awake()
     {
@@ -30,53 +41,30 @@ public class ResetButton : MonoBehaviour
 
     private void Start()
     {
-        board = FindAnyObjectByType<Board>();
-        board.onCellPress += Surprise;
-        board.onCellRelease += ReSmile;
-
-        gameManager = GameManager.Instance;
-        gameManager.onGameReady += Smile;
-        gameManager.onGameOver += GameOver;
-        gameManager.onGameClear += GameClear;
-
         button.onClick.AddListener(OnClick);
-    }
 
-    private void Surprise()
-    {
-        if (image.sprite != this[ResetButtonType.GameOver] && image.sprite != this[ResetButtonType.GameClear])
+        GameManager gameManager = GameManager.Instance;
+        gameManager.Board.onBoardLeftPress += () =>
         {
-            image.sprite = this[ResetButtonType.Surprise];
-        }
-    }
-
-    private void ReSmile()
-    {
-        if (image.sprite != this[ResetButtonType.GameOver] && image.sprite != this[ResetButtonType.GameClear])
+            State = ButtonState.Surprise;
+        };
+        gameManager.Board.onBoardLeftRelease += () =>
         {
-            image.sprite = this[ResetButtonType.Smile];
-        }
+            State = ButtonState.Normal;
+        };
+
+        gameManager.onGameOver += () => State = ButtonState.GameOver;
+        gameManager.onGameClear += () => State = ButtonState.GameClear;
+
     }
 
-    private void Smile()
+    void OnClick()
     {
-        image.sprite = this[ResetButtonType.Smile];
-    }
-
-    private void GameClear()
-    {
-        image.sprite = this[ResetButtonType.GameClear];
-    }
-
-    private void GameOver()
-    {
-        image.sprite = this[ResetButtonType.GameOver];
-    }
-
-
-
-    private void OnClick()
-    {
+        State = ButtonState.Normal;
         GameManager.Instance.GameReset();
     }
+
 }
+
+// 게임 오버가 되면 리셋버튼의 이미지가 Reset_GameOver로 변경된다.
+// 게임 클리어가 되면 리셋버튼의 이미지가 Reset_Clear로 변경된다.

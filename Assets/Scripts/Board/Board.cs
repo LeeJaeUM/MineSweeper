@@ -55,13 +55,12 @@ public class Board : MonoBehaviour
                 currentCell?.RestoreCovers();   // 이전 currentCell이 눌려놓았던 것을 모두 원래대로 복구
                 currentCell = value;
                 currentCell?.LeftPress();       // 새 currentCell에 누르기 처리
-
             }
         }
     }
 
-    public Action onCellPress;
-    public Action onCellRelease;
+    public Action onBoardLeftPress;
+    public Action onBoardLeftRelease;
 
     /// <summary>
     /// 인풋시스템을 위한 인풋액션
@@ -77,6 +76,11 @@ public class Board : MonoBehaviour
     /// 게임 매니저
     /// </summary>
     GameManager gameManager;
+
+    /// <summary>
+    /// 현재 플레이 중인지 확인하는 프로퍼티
+    /// </summary>
+    public bool IsPlaying => gameManager.IsPlaying;
 
     private void Awake()
     {
@@ -135,7 +139,7 @@ public class Board : MonoBehaviour
 
                 cell.onFlagUse += gameManager.DecreaseFlagCount;        // 셀에 깃발 설치됬을 때 실행될 함수 연결
                 cell.onFlagReturn += gameManager.IncreaseFlagCount;     // 셀의 깃발이 제거되었을 떄 실행될 함수 연결
-                cell.onExplosion += gameManager.GameOver;
+                cell.onExplosion += gameManager.GameOver;               // 셀에서 지뢰가 터졌을 때 실행될 함수 연결
 
                 cellObj.name = $"Cell_{id}_({x},{y})";      // 게임 오브젝트의 이름을 알아보기 쉽게 변경
 
@@ -149,7 +153,7 @@ public class Board : MonoBehaviour
             cell.Initialize();
         }
 
-        gameManager.onGameReady += ResetBoard;
+        gameManager.onGameReady += ResetBoard;  // 레디로 가면 보드 리셋
         gameManager.onGameOver += OnGameOver;
 
         // 보드 데이터 리셋
@@ -175,26 +179,28 @@ public class Board : MonoBehaviour
         }
     }
 
+    // 게임 메니저 상태 변화시 사용할 함수들 ----------------------------------------------------------------
 
+    /// <summary>
+    /// 게임오버가 되면 보드가 처리할 일을 기록해 놓은 함수
+    /// </summary>
     private void OnGameOver()
     {
-        Debug.Log("게임오버 신호를 받음");
-        //
-        foreach(Cell cell in cells)
+        // Debug.Log("보드 : 게임오버 신호를 받음");
+        foreach (Cell cell in cells)
         {
-            if(cell.IsFlaged && !cell.HasMine)
+            if (cell.IsFlaged && !cell.HasMine)
             {
-                //잘못 설치한 깃발 스프라이트 변경
+                // 잘못 설치한 깃발은 Cell_Open_NotMine 스프라이트로 변경
                 cell.FlagMistake();
             }
             else if (!cell.IsFlaged && cell.HasMine)
             {
-                cell.MineNotFount();
+                // 못찾은 지뢰는 커버를 제거해서 위치를 보여준다.
+                cell.MineNotFound();
             }
         }
     }
-
-
 
     // 셀 확인용 함수들 ------------------------------------------------------------------------------------
 
@@ -274,11 +280,15 @@ public class Board : MonoBehaviour
         //Debug.Log( GetCell(screen)?.gameObject.name );
 
         Cell cell = GetCell(screen);
-        if(cell != null)
+        if (cell != null)
         {
-            onCellPress();
             gameManager.GameStart();
             cell.LeftPress();
+
+            if (gameManager.IsPlaying)
+            {
+                onBoardLeftPress?.Invoke();
+            }
         }
     }
 
@@ -286,26 +296,11 @@ public class Board : MonoBehaviour
     {
         Vector2 screen = Mouse.current.position.ReadValue();
         Cell cell = GetCell(screen);
-        if(cell != null)
+        cell?.LeftRelease();
+        if (gameManager.IsPlaying)
         {
-            cell.LeftRelease();
-            onCellRelease();
-
-            int checkCount = 0;
-            foreach(Cell cell2 in cells)
-            {
-                if (cell2.HasMine && cell2.IsFlaged)
-                {
-                    checkCount++;
-                }
-            }
-
-            if(checkCount == mineCount) 
-            { 
-                gameManager.GameClear();
-            }
+            onBoardLeftRelease?.Invoke();
         }
-
     }
 
     private void OnRightClick(InputAction.CallbackContext context)
