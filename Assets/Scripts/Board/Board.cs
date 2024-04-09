@@ -145,6 +145,7 @@ public class Board : MonoBehaviour
             cell.Initialize();
         }
 
+        gameManager.onGameReady += ResetBoard;
         gameManager.onGameOver += OnGameOver;
 
         // 보드 데이터 리셋
@@ -269,7 +270,11 @@ public class Board : MonoBehaviour
         //Debug.Log( GetCell(screen)?.gameObject.name );
 
         Cell cell = GetCell(screen);
-        cell?.LeftPress();
+        if(cell != null)
+        {
+            gameManager.GameStart();
+            cell.LeftPress();
+        }
     }
 
     private void OnLeftRelease(InputAction.CallbackContext context)
@@ -286,7 +291,11 @@ public class Board : MonoBehaviour
 
         // 이 위치에 있는 셀의 RightPress()가 실행된다.
         Cell cell = GetCell(screen);
-        cell?.RightPress();
+        if (cell != null)
+        {
+            gameManager.GameStart();
+            cell.RightPress();
+        }
     }
 
     private void OnMouseMove(InputAction.CallbackContext context)

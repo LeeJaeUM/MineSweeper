@@ -37,6 +37,7 @@ public class GameManager : Singleton<GameManager>
                 switch (state)
                 {
                     case GameState.Ready:
+                        flagCount = mineCount;
                         onGameReady?.Invoke();      // 델리게이트 실행
                         break;
                     case GameState.Play:
@@ -135,11 +136,14 @@ public class GameManager : Singleton<GameManager>
 
     public void GameStart()
     {
-
+        if (State == GameState.Ready)
+        {
+            State = GameState.Play;
+        }
     }
     public void GameReset()
     {
-
+        State = GameState.Ready;
     }
     public void GameOver()
     {
