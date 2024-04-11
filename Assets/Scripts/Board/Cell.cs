@@ -316,6 +316,8 @@ public class Cell : MonoBehaviour
         }
     }
 
+    public Action onOpenCell;
+
     /// <summary>
     /// 셀을 여는 함수
     /// </summary>
@@ -325,6 +327,7 @@ public class Cell : MonoBehaviour
         {
             isOpen = true;                      // 열렸다고 표시
             cover.gameObject.SetActive(false);  // 커버 제거
+            onOpenCell?.Invoke();
 
             if (hasMine)                        // 지뢰가 있다.
             {
@@ -390,13 +393,18 @@ public class Cell : MonoBehaviour
     {
         cover.gameObject.SetActive(false);
     }
-
+    public void BoardClearProcess()
+    {
+        cover.sprite = Board[CloseCellType.Flag];
+    }
 
 #if UNITY_EDITOR
     public void Test_OpenCover()
     {
         cover.gameObject.SetActive(false);
     }
+
+
 #endif
 
 }

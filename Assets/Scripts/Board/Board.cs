@@ -72,6 +72,8 @@ public class Board : MonoBehaviour
     public Sprite[] closeCellImage;
     public Sprite this[CloseCellType type] => closeCellImage[(int)type];
 
+    public int closeCellCount = 0;
+
     /// <summary>
     /// 게임 매니저
     /// </summary>
@@ -140,6 +142,19 @@ public class Board : MonoBehaviour
                 cell.onFlagUse += gameManager.DecreaseFlagCount;        // 셀에 깃발 설치됬을 때 실행될 함수 연결
                 cell.onFlagReturn += gameManager.IncreaseFlagCount;     // 셀의 깃발이 제거되었을 떄 실행될 함수 연결
                 cell.onExplosion += gameManager.GameOver;               // 셀에서 지뢰가 터졌을 때 실행될 함수 연결
+                cell.onOpenCell += () =>
+                {
+                    closeCellCount--;
+                    if(closeCellCount == mineCount)
+                    {
+                        foreach (Cell cell in cells)
+                        {
+                            cell.BoardClearProcess();
+                        }
+                        gameManager.GameClear();
+                    }
+                };
+
 
                 cellObj.name = $"Cell_{id}_({x},{y})";      // 게임 오브젝트의 이름을 알아보기 쉽게 변경
 
@@ -177,6 +192,8 @@ public class Board : MonoBehaviour
         {
             cells[shuffleResult[i]].SetMine();
         }
+
+        closeCellCount = cells.Length;
     }
 
     // 게임 메니저 상태 변화시 사용할 함수들 ----------------------------------------------------------------
@@ -292,7 +309,6 @@ public class Board : MonoBehaviour
         }
     }
 
-    public int testcheck = 0;
     private void OnLeftRelease(InputAction.CallbackContext context)
     {
         Vector2 screen = Mouse.current.position.ReadValue();
@@ -304,10 +320,10 @@ public class Board : MonoBehaviour
         if(cell != null)
         {
             cell.LeftRelease();
-            if(testcheck == mineCount)
-            {
-                gameManager.GameClear();
-            }
+            //if(closeCellCount == mineCount)
+            //{
+            //    gameManager.GameClear();
+            //}
         }
     }
 
@@ -321,17 +337,17 @@ public class Board : MonoBehaviour
         {
             gameManager.GameStart();
             cell.RightPress();
-            if (cell.HasMine)
-            {
-                if(!cell.IsFlaged)
-                {
-                    testcheck--;
-                }
-                else
-                {
-                    testcheck++;
-                }
-            }
+            //if (cell.HasMine)
+            //{
+            //    if(!cell.IsFlaged)
+            //    {
+            //        closeCellCount--;
+            //    }
+            //    else
+            //    {
+            //        closeCellCount++;
+            //    }
+            //}
         }
     }
 
