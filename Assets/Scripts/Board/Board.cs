@@ -74,6 +74,35 @@ public class Board : MonoBehaviour
 
     public int closeCellCount = 0;
 
+    int actionCount = 0;
+    public int ActionCount
+    {
+        get => actionCount;
+        set
+        {
+            actionCount = value;
+            onAction?.Invoke(actionCount);
+        }
+    }
+
+    public Action<int> onAction;
+
+    [SerializeField]int findMineCount = 0;
+    [SerializeField]int notFindMineCount = 0;
+
+    public int FindMineCount
+    {
+        get => findMineCount;
+        set
+        {
+            findMineCount = value;
+            notFindMineCount = mineCount - findMineCount;
+        }
+    }
+
+    public Action<int, int> onMinCount;
+    
+
     /// <summary>
     /// 게임 매니저
     /// </summary>
@@ -152,6 +181,7 @@ public class Board : MonoBehaviour
                             cell.BoardClearProcess();
                         }
                         gameManager.GameClear();
+                        onMinCount?.Invoke(findMineCount, notFindMineCount);
                     }
                 };
 
@@ -175,6 +205,7 @@ public class Board : MonoBehaviour
         ResetBoard();
     }
 
+
     /// <summary>
     /// 보드에 존재하는 모들 셀의 데이터를 리셋하고 지뢰를 새로 배치하는 함수(게임 재시작용 함수)
     /// </summary>
@@ -194,6 +225,10 @@ public class Board : MonoBehaviour
         }
 
         closeCellCount = cells.Length;
+
+        actionCount = 0;
+        findMineCount = 0;
+        notFindMineCount = 0;
     }
 
     // 게임 메니저 상태 변화시 사용할 함수들 ----------------------------------------------------------------
@@ -203,6 +238,7 @@ public class Board : MonoBehaviour
     /// </summary>
     private void OnGameOver()
     {
+        onMinCount?.Invoke(findMineCount, notFindMineCount);
         // Debug.Log("보드 : 게임오버 신호를 받음");
         foreach (Cell cell in cells)
         {
@@ -324,6 +360,7 @@ public class Board : MonoBehaviour
             //{
             //    gameManager.GameClear();
             //}
+            ActionCount++;
         }
     }
 
@@ -337,17 +374,14 @@ public class Board : MonoBehaviour
         {
             gameManager.GameStart();
             cell.RightPress();
-            //if (cell.HasMine)
-            //{
-            //    if(!cell.IsFlaged)
-            //    {
-            //        closeCellCount--;
-            //    }
-            //    else
-            //    {
-            //        closeCellCount++;
-            //    }
-            //}
+            if (cell.HasMine)
+            {
+                if (!cell.IsFlaged)
+                    FindMineCount--;
+                else
+                    FindMineCount++;
+            }
+            ActionCount++;
         }
     }
 

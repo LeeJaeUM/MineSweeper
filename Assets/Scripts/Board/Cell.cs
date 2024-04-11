@@ -401,7 +401,7 @@ public class Cell : MonoBehaviour
 #if UNITY_EDITOR
     public void Test_OpenCover()
     {
-        Color color = Color.white;
+        Color color = cover.color;
         color.a = 0.25f;
         cover.color = color;
         //cover.gameObject.SetActive(false);
